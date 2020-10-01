@@ -1,0 +1,15 @@
+Test Case 1:
+Since this is Cesar Shift, "D" is either "i" or "a" as those are the only two possible stand alone letter. The frequency counter shows that "H" has the highest frequency. Testing -3 as the decryption key, we have the message:
+
+THIS MESSAGE WAS ENCRYPTED USING A CAESAR SHIFT CIPHER 
+
+Test Case 1b:
+Pairs of similar frequency letters are "hi", "no" and "rs". In the ciphertext, SVW are both high frequency letters. ehi also show similar pattern, implying that the key was +14
+
+Test Case 2:
+Since "V" has the highest frequency, it is probably "e"
+
+TO DECODE THIS, YOU SOLVED AN ATBASH CIPHER. EXCELLENT!  
+
+Test Case 3:
+
