@@ -1,66 +1,76 @@
 """
 Andrew Jiang
 CyberSecurity
-
-
 """
-import sys
+from frequency import letter_freq
+from caesar_cipher import freq_compare
 import csv
+import sys
 
 filepath = ""
-letters= "abcdefghijklmnopqrstuvwxyz"
-reference = {}
+files = ["references", "bigram", "trigram", "words"]
+data = {}
 
+punct = ".,!"
 def reference_setup():
-# takes in a csv of the "baseline" frequencies and put it in a dictionary called reference
-	with open ('reference.csv','r') as fp:
-		for line in csv.reader(fp):
-			reference[line[0].lower().strip()] = float(line[1])/100
+	for name in files:
+		temp = {}
+		with open ('references/{}.csv'.format(name), 'r') as fp:
+			for line in csv.reader(fp):
+				temp[line[0].lower().strip()] = float(line[1])/100
+		data["{}".format(name)] = temp
 
+def substitution_cipher(cont):
+	top_choice = ["e","t","a","i","o","n","s","r"]
+	res = {} #returns potential plaintexts and their fitness level
+	cipher_words = {} #holds a list of all the words in an array with number of occurance as value
+	freq = letter_freq(cont) #frequency of all the letters
+	fitness = freq_compare(freq, data["references"])
 
+	temp = cont.lower().split(' ')
+	for i in range(len(temp)):
+		if temp[i][-1] in punct:
+			tstring = temp[i][:-1]
+		else:
+			tstring = temp[i]
+		if tstring not in cipher_words:
+			cipher_words[tstring] = 1
+		else:
+			cipher_words[tstring] += 1
 
-def letter_freq(content):
-# takes in a string and returns a dictionary of the frequency of each letter
-	res = {}
-	counter = 0
+	#print(sorted(freq.values(), reverse = True)[0])
+	for i in range(len(top_choice)):
+		for ele in freq:
+			if freq[ele] == sorted(freq.values(), reverse = True)[i]:
+				lett = ele
+		replaced = cont.replace(lett,top_choice[i])
+		cipher_fitness = freq_compare(letter_freq(replaced), data["references"])
+		if cipher_fitness < fitness:
+			res[replaced] = cipher_fitness
 
-	for letter in letters:
-		res[letter] = 0
-		for char in content:
-			if char in res:
-				counter += 1
-				res[char]+= 1
-	for char in res:
-		res[char] = res[char] / counter
-	return res
-
-
-
-def caesar_shift(content):
-# takes a string of text and runs through all cases for a caesar shift
-	possible_combo = {}
-	for key in range(26):
-		temp = ""
-		for i in range(len(content)):
-			if content[i] in letters:
-				temp = temp + letters[(letters.index(content[i]) + key) % 26]
-		possible_combo[temp] = freq_compare(letter_freq(temp))
-	sort_dictionary = sorted(possible_combo.items(), key = lambda x: x[1], reverse = False)
-
-	for i in sort_dictionary:
-		print(i[0], i[1])
-def freq_compare(cipher_dict):
-# takes in a dictionary of letter frequencies, return a delta value compared with the baseline data
-	lis = cipher_dict
-	delta = 0.0
-	for ele in lis:
-		delta = delta + abs(lis[ele]- reference[ele])
-	return delta
-
+	#finds and replaces one word elements with "a" or "i" then checks fitness
+	arrg = {}
+	for ele in cipher_words:
+			for string in res:
+				if len(ele) == 1:
+					new1 = string.replace(ele, "a")
+					arrg[new1] = freq_compare(letter_freq(new1), data["references"])
+					new = string.replace(ele, "i")
+					arrg[new] = freq_compare(letter_freq(new), data["references"])
+			res.update(arrg)
+	sort_dictionary = sorted(res.items(), key = lambda x: x[1], reverse = False)
+	count = 0
+	for i in sort_dictionary: 
+		if(count <= 5):
+			print(i[0], i[1])
+			count = count + 1
 
 if __name__ == "__main__":
 	filepath = str(sys.argv[1])
 	reference_setup()
 	with open(filepath, "r") as fp:
 		cont = fp.read().lower()
-	caesar_shift(cont)
+	substitution_cipher(cont)
+
+
+
