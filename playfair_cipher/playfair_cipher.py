@@ -1,5 +1,4 @@
 import sys
-import numpy as np
 
 key_dict = {}
 key_grid = []
@@ -13,7 +12,7 @@ def key_parse(key): #takes in text and key, create 2d grid for key and list of t
 	for x in range (5):
 		for y in range (5):
 			key_dict[key_grid[x][y]] = (x,y)
-	
+
 
 def text_parse(text):
 	lis = []
@@ -32,6 +31,7 @@ def text_parse(text):
 	for k in range(int(len(lis)/2)):
 		text_list.append(lis[2*k]+ lis[2*k+1])
 
+
 def playfair(text, key, process):
 	res = ""
 	key_parse(key)
@@ -43,17 +43,17 @@ def playfair(text, key, process):
 		y1 = key_dict[duo[1]][1]
 		if x0 != x1 and y0 != y1:
 			res += rect_swap(x0, y0, x1, y1)
-			print(res)
 		elif x0 == x1:
 			res += row_swap(x0, y0, x1, y1, process)
-			print(res)
 		elif y0 == y1:
 			res += column_swap(x0, y0, x1, y1, process)
 	print(res)
 
+
 def rect_swap(x0, y0, x1, y1):
 	cip = key_grid[x0][y1] + key_grid[x1][y0]
 	return cip
+
 
 def row_swap(x0, y0, x1, y1, process):
 	i = 0
@@ -64,6 +64,7 @@ def row_swap(x0, y0, x1, y1, process):
 	cip = key_grid[(x0 + i) % 5][y0] + key_grid[(x1 + i) % 5][y1]
 	return cip
 
+
 def column_swap(x0, y0, x1, y1, process):
 	i = 0
 	if process == "encode":
@@ -72,8 +73,6 @@ def column_swap(x0, y0, x1, y1, process):
 		i = -1
 	cip = key_grid[x0][(y0 + i) % 5] + key_grid[x1][(y1 + i )% 5]
 	return cip
-
-
 	
 if __name__ == "__main__":
 	process = str(sys.argv[1])
