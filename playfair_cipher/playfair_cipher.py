@@ -19,7 +19,10 @@ def text_parse(text):
 	var = 1
 	j = 0
 	for i in text:
-		lis.append(i)
+		if i =="J":
+			lis.append("I")
+		else:
+			lis.append(i)
 	while j < len(lis):
 		if j % 2 == 0:
 			if j + 1 < len(lis) and lis[j] == lis[j+1]:
