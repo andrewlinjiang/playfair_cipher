@@ -39,6 +39,7 @@ def playfair(text, key, process):
 	res = ""
 	key_parse(key)
 	text_parse(text)
+	print(key_dict)
 	for duo in text_list:
 		x0 = key_dict[duo[0]][0]
 		y0 = key_dict[duo[0]][1]
@@ -78,7 +79,7 @@ def column_swap(x0, y0, x1, y1, process):
 	return cip
 	
 if __name__ == "__main__":
-	process = str(sys.argv[1])
-	text = str(sys.argv[2])
-	key = str(sys.argv[3])
+	process = str(sys.argv[1]).upper()
+	text = str(sys.argv[2]).upper()
+	key = str(sys.argv[3]).upper()
 	playfair(text, key, process)
